@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Monitoring & Control System</title>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-yellow-400: rgba(245, 158, 11, 1);
+            --color-green-400: rgba(34, 197, 94, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-red-500-rgb: 192, 21, 47;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-size-4xl: 30px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-teal-700) 100%);
+            color: white;
+            padding: var(--space-24) var(--space-32);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            font-size: var(--font-size-4xl);
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .header p {
+            font-size: var(--font-size-lg);
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: var(--space-32) var(--space-16);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        .card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+            padding: var(--space-24);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+        }
+
+        .card-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .aqi-value {
+            font-size: 48px;
+            font-weight: 700;
+            margin: var(--space-16) 0;
+            text-align: center;
+        }
+
+        .aqi-label {
+            text-align: center;
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .aqi-description {
+            text-align: center;
+            color: var(--color-text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .pollutant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-12) 0;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .pollutant-item:last-child {
+            border-bottom: none;
+        }
+
+        .pollutant-name {
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        .pollutant-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .status-good {
+            color: var(--color-green-400);
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .status-moderate {
+            color: var(--color-yellow-400);
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        .status-unhealthy {
+            color: var(--color-orange-400);
+            background-color: rgba(230, 129, 97, 0.1);
+        }
+
+        .status-hazardous {
+            color: var(--color-red-400);
+            background-color: rgba(255, 84, 89, 0.1);
+        }
+
+        .chart-container {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            padding: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        .chart-header {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--space-20);
+        }
+
+        .chart {
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            gap: var(--space-8);
+            padding: var(--space-16) 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-teal-700) 100%);
+            border-radius: var(--radius-base) var(--radius-base) 0 0;
+            min-height: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: translateY(-4px);
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        .feature-card {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            padding: var(--space-24);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-teal-700) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: var(--space-16);
+        }
+
+        .feature-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .feature-description {
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+        }
+
+        .control-panel {
+            background-color: var(--color-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            padding: var(--space-24);
+            margin-bottom: var(--space-32);
+        }
+
+        .control-header {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--space-20);
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-16);
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-8);
+        }
+
+        .control-label {
+            font-weight: 500;
+            font-size: var(--font-size-base);
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-24);
+            border-radius: var(--radius-base);
+            border: none;
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 32px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--color-border);
+            border-radius: 32px;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 24px;
+            width: 24px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--color-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(28px);
+        }
+
+        .alert {
+            background-color: var(--color-surface);
+            border-left: 4px solid var(--color-primary);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            margin-bottom: var(--space-16);
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: var(--space-8);
+        }
+
+        .footer {
+            background-color: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            padding: var(--space-32);
+            text-align: center;
+            color: var(--color-text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: var(--font-size-3xl);
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .timestamp {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-16);
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background-color: var(--color-green-400);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Air Quality Monitoring & Control System</h1>
+            <p>Real-time environmental monitoring for healthier living and working spaces</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="timestamp">
+            <span class="pulse"></span>
+            <span>Live Data - Updated: <span id="timestamp"></span></span>
+        </div>
+
+        <!-- Main Dashboard -->
+        <div class="dashboard-grid">
+            <!-- AQI Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon status-good">🌤️</div>
+                    <div class="card-title">Air Quality Index</div>
+                </div>
+                <div class="aqi-value status-good" id="aqi-value">42</div>
+                <div class="aqi-label status-good" id="aqi-label">Good</div>
+                <div class="aqi-description">Air quality is satisfactory and poses little or no health risk</div>
+            </div>
+
+            <!-- PM2.5 Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon status-good" style="background-color: rgba(34, 197, 94, 0.1);">💨</div>
+                    <div class="card-title">PM2.5 Particles</div>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Current Level</span>
+                    <span class="pollutant-value" id="pm25">12.3 μg/m³</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">24h Average</span>
+                    <span class="pollutant-value">15.8 μg/m³</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Status</span>
+                    <span class="pollutant-value status-good">✓ Normal</span>
+                </div>
+            </div>
+
+            <!-- PM10 Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon status-good" style="background-color: rgba(34, 197, 94, 0.1);">🌫️</div>
+                    <div class="card-title">PM10 Particles</div>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Current Level</span>
+                    <span class="pollutant-value" id="pm10">28.5 μg/m³</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">24h Average</span>
+                    <span class="pollutant-value">32.4 μg/m³</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Status</span>
+                    <span class="pollutant-value status-good">✓ Normal</span>
+                </div>
+            </div>
+
+            <!-- CO2 Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon status-moderate" style="background-color: rgba(245, 158, 11, 0.1);">🏭</div>
+                    <div class="card-title">Carbon Dioxide (CO₂)</div>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Current Level</span>
+                    <span class="pollutant-value" id="co2">485 ppm</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Average</span>
+                    <span class="pollutant-value">520 ppm</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Status</span>
+                    <span class="pollutant-value status-good">✓ Normal</span>
+                </div>
+            </div>
+
+            <!-- VOC Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon status-good" style="background-color: rgba(34, 197, 94, 0.1);">🧪</div>
+                    <div class="card-title">VOC (Volatile Compounds)</div>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Current Level</span>
+                    <span class="pollutant-value" id="voc">145 ppb</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Average</span>
+                    <span class="pollutant-value">160 ppb</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Status</span>
+                    <span class="pollutant-value status-good">✓ Normal</span>
+                </div>
+            </div>
+
+            <!-- Environmental Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: rgba(50, 184, 198, 0.1); color: var(--color-primary);">🌡️</div>
+                    <div class="card-title">Environmental Conditions</div>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Temperature</span>
+                    <span class="pollutant-value" id="temp">22.5°C</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Humidity</span>
+                    <span class="pollutant-value" id="humidity">58%</span>
+                </div>
+                <div class="pollutant-item">
+                    <span class="pollutant-name">Pressure</span>
+                    <span class="pollutant-value">1013 hPa</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historical Data Chart -->
+        <div class="chart-container">
+            <h2 class="chart-header">AQI Trend - Last 7 Days</h2>
+            <div class="chart" id="aqiChart">
+                <div class="bar" style="height: 45%;">
+                    <span class="bar-value">45</span>
+                    <span class="bar-label">Mon</span>
+                </div>
+                <div class="bar" style="height: 38%;">
+                    <span class="bar-value">38</span>
+                    <span class="bar-label">Tue</span>
+                </div>
+                <div class="bar" style="height: 52%;">
+                    <span class="bar-value">52</span>
+                    <span class="bar-label">Wed</span>
+                </div>
+                <div class="bar" style="height: 48%;">
+                    <span class="bar-value">48</span>
+                    <span class="bar-label">Thu</span>
+                </div>
+                <div class="bar" style="height: 41%;">
+                    <span class="bar-value">41</span>
+                    <span class="bar-label">Fri</span>
+                </div>
+                <div class="bar" style="height: 36%;">
+                    <span class="bar-value">36</span>
+                    <span class="bar-label">Sat</span>
+                </div>
+                <div class="bar" style="height: 42%;">
+                    <span class="bar-value">42</span>
+                    <span class="bar-label">Sun</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts Section -->
+        <div class="alert">
+            <div class="alert-title">📊 System Status: Normal Operation</div>
+            <p>All sensors are functioning properly. No air quality alerts at this time.</p>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2 class="control-header">System Controls</h2>
+            <div class="control-grid">
+                <div class="control-item">
+                    <label class="control-label">Air Purifier</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="purifier" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="control-item">
+                    <label class="control-label">Ventilation System</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="ventilation" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="control-item">
+                    <label class="control-label">Auto-Adjustment Mode</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="auto-mode" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="control-item">
+                    <label class="control-label">Alert Notifications</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="notifications" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <h2 style="font-size: var(--font-size-3xl); margin-bottom: var(--space-24); font-weight: 600;">System Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📡</div>
+                <h3 class="feature-title">Real-Time Monitoring</h3>
+                <p class="feature-description">Continuous tracking of PM2.5, PM10, CO₂, VOCs, and environmental parameters with laboratory-grade accuracy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant Alerts</h3>
+                <p class="feature-description">Receive immediate notifications when air quality thresholds are exceeded, enabling quick corrective action.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Auto-Adjustment</h3>
+                <p class="feature-description">Smart system automatically adjusts ventilation and purification based on real-time air quality data.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Data Analytics</h3>
+                <p class="feature-description">Comprehensive reports and trend analysis to identify patterns and optimize air quality management.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Compliance Ready</h3>
+                <p class="feature-description">Automated regulatory reporting with historical data logging for environmental compliance audits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌐</div>
+                <h3 class="feature-title">Remote Access</h3>
+                <p class="feature-description">Monitor and control your air quality system from anywhere via web dashboard or mobile app.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Air Quality Monitoring & Control System. Ensuring healthy indoor environments.</p>
+        <p style="margin-top: var(--space-8); font-size: var(--font-size-sm);">Real-time data updates every 5 minutes</p>
+    </footer>
+
+    <script>
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('timestamp').textContent = timeString;
+        }
+
+        // Simulate real-time data updates
+        function updateSensorData() {
+            // AQI (0-500)
+            const aqi = Math.floor(Math.random() * 30) + 35; // 35-65 range
+            const aqiElement = document.getElementById('aqi-value');
+            const aqiLabel = document.getElementById('aqi-label');
+            
+            aqiElement.textContent = aqi;
+            
+            // Update AQI status
+            if (aqi <= 50) {
+                aqiElement.className = 'aqi-value status-good';
+                aqiLabel.className = 'aqi-label status-good';
+                aqiLabel.textContent = 'Good';
+            } else if (aqi <= 100) {
+                aqiElement.className = 'aqi-value status-moderate';
+                aqiLabel.className = 'aqi-label status-moderate';
+                aqiLabel.textContent = 'Moderate';
+            } else if (aqi <= 150) {
+                aqiElement.className = 'aqi-value status-unhealthy';
+                aqiLabel.className = 'aqi-label status-unhealthy';
+                aqiLabel.textContent = 'Unhealthy for Sensitive';
+            } else {
+                aqiElement.className = 'aqi-value status-hazardous';
+                aqiLabel.className = 'aqi-label status-hazardous';
+                aqiLabel.textContent = 'Hazardous';
+            }
+
+            // PM2.5 (0-500 μg/m³)
+            const pm25 = (Math.random() * 10 + 10).toFixed(1);
+            document.getElementById('pm25').textContent = pm25 + ' μg/m³';
+
+            // PM10 (0-600 μg/m³)
+            const pm10 = (Math.random() * 15 + 25).toFixed(1);
+            document.getElementById('pm10').textContent = pm10 + ' μg/m³';
+
+            // CO2 (400-2000 ppm)
+            const co2 = Math.floor(Math.random() * 100 + 450);
+            document.getElementById('co2').textContent = co2 + ' ppm';
+
+            // VOC (0-500 ppb)
+            const voc = Math.floor(Math.random() * 50 + 130);
+            document.getElementById('voc').textContent = voc + ' ppb';
+
+            // Temperature (15-30°C)
+            const temp = (Math.random() * 5 + 20).toFixed(1);
+            document.getElementById('temp').textContent = temp + '°C';
+
+            // Humidity (30-80%)
+            const humidity = Math.floor(Math.random() * 20 + 50);
+            document.getElementById('humidity').textContent = humidity + '%';
+        }
+
+        // Control panel event listeners
+        document.getElementById('purifier').addEventListener('change', function() {
+            const status = this.checked ? 'enabled' : 'disabled';
+            console.log('Air Purifier ' + status);
+        });
+
+        document.getElementById('ventilation').addEventListener('change', function() {
+            const status = this.checked ? 'enabled' : 'disabled';
+            console.log('Ventilation System ' + status);
+        });
+
+        document.getElementById('auto-mode').addEventListener('change', function() {
+            const status = this.checked ? 'enabled' : 'disabled';
+            console.log('Auto-Adjustment Mode ' + status);
+        });
+
+        document.getElementById('notifications').addEventListener('change', function() {
+            const status = this.checked ? 'enabled' : 'disabled';
+            console.log('Alert Notifications ' + status);
+        });
+
+        // Initialize
+        updateTimestamp();
+        updateSensorData();
+
+        // Update every 5 seconds for demo purposes
+        setInterval(updateTimestamp, 1000);
+        setInterval(updateSensorData, 5000);
+    </script>
+</body>
+</html>
